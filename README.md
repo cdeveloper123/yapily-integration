@@ -124,3 +124,125 @@
 - Ensure that your MongoDB instance is properly set up and connected to store account and transaction data.
 - The **Consent Token** is critical for authentication, and it must be passed in the `consent-token` header for each endpoint that requires it.
 - Make sure to store your **App UUID** and **App Secret** securely. These are required for making API calls to Yapily's sandbox environment.
+
+
+---
+
+
+# API Curl 
+
+## 1. **Initiate Authorization for a User to Use Institution Sandbox**
+
+This request initiates the authorization process for a user to access the institution sandbox environment.
+
+### Endpoint:
+`POST /accounts/initiate-auth`
+
+### Request:
+```bash
+curl --location 'http://localhost:5000/accounts/initiate-auth' \
+--header 'Content-Type: application/json' \
+--data '{
+  "applicationUserId": "test-user-1",
+  "institutionId": "modelo-sandbox"
+}'
+```
+
+### Parameters:
+- `applicationUserId`: The ID of the user making the request.
+- `institutionId`: The ID of the institution sandbox the user is accessing (e.g., "modelo-sandbox").
+
+---
+
+## 2. **Fetch All Accounts from Yapily and Store in Local DB**
+
+This request fetches all the user accounts from Yapily and stores them into your local database.
+
+### Endpoint:
+`POST /accounts/fetch`
+
+### Request:
+```bash
+curl --location --request POST 'http://localhost:5000/accounts/fetch' \
+--header 'Content-Type: application/json' \
+--header 'consent-token: <Consent_Token>'
+```
+
+### Parameters:
+- `consent-token`: A token obtained from the authorization process that grants access to the user's accounts.
+
+---
+
+## 3. **Fetch All Accounts from Local Database**
+
+This request fetches all accounts stored in your local database.
+
+### Endpoint:
+`GET /accounts`
+
+### Request:
+```bash
+curl --location 'http://localhost:5000/accounts'
+```
+
+### Response:
+Returns a list of all accounts stored in the local database.
+
+---
+
+## 4. **Fetch All Transactions of a User from Yapily and Store in Local DB**
+
+This request fetches all transactions associated with a user’s specific account from Yapily and stores them into your local database.
+
+### Endpoint:
+`POST /transactions/fetch`
+
+### Request:
+```bash
+curl --location 'http://localhost:5000/transactions/fetch' \
+--header 'Content-Type: application/json' \
+--header 'consent-token: <Consent_Token>' \
+--data '{
+  "accountId": "<accountId>"
+}'
+```
+
+### Parameters:
+- `consent-token`: A token obtained from the authorization process.
+- `accountId`: The ID of the account whose transactions you want to fetch.
+
+---
+
+## 5. **Fetch All Transactions of a User from Local Database**
+
+This request fetches all transactions stored in your local database for a specific account.
+
+### Endpoint:
+`GET /transactions/{accountId}`
+
+### Request:
+```bash
+curl --location 'http://localhost:5000/transactions/{accountId}'
+```
+
+### Parameters:
+- `{accountId}`: Replace with the actual account ID for which you want to retrieve transactions.
+
+---
+
+## Additional Notes:
+
+- **Local Database Endpoints** (`/accounts` and `/transactions/{accountId}`) are meant to be used after successfully fetching the data from Yapily and storing it in your local database.
+- Replace `<Consent_Token>` and `<accountId>` with actual values when making requests.
+- Ensure your local server is running and accessible for these endpoints (running on `localhost:5000`).
+
+---
+
+### Example Workflow:
+1. **Authorize User** → Initiate the sandbox authorization.
+2. **Fetch Accounts** → Fetch all user accounts from Yapily and store in the local database.
+3. **Fetch Transactions** → Fetch all user transactions from Yapily and store in the local database.
+4. **Retrieve Accounts** → Fetch stored accounts from the local database.
+5. **Retrieve Transactions** → Fetch transactions of a specific account from the local database.
+
+
