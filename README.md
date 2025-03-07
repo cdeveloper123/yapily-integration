@@ -122,7 +122,5 @@
 ## Notes
 
 - Ensure that your MongoDB instance is properly set up and connected to store account and transaction data.
-- The **Consent Token** is critical for authentication, and it must be passed in the `Authorization` header for each endpoint that requires it.
+- The **Consent Token** is critical for authentication, and it must be passed in the `consent-token` header for each endpoint that requires it.
 - Make sure to store your **App UUID** and **App Secret** securely. These are required for making API calls to Yapily's sandbox environment.
-
-# yapily-integration
